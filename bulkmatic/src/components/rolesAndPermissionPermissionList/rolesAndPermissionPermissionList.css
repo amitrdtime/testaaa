@@ -1,0 +1,14 @@
+.disabledCheckbox label:before{
+    border: 2px solid #cfd0d0;
+    background: #f3f3f3;
+}
+
+.permissionchklistbutton{
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.pl_6 {
+    padding-left: 6px;
+}

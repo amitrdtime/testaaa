@@ -1,0 +1,84 @@
+@media print {
+    @page { margin: 0; }
+    body { margin: 1.6cm; }
+  }
+
+
+  .yardprint table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .yardprint td, th {
+    /* border: 1px solid #dddddd; */
+   
+    text-align: left;
+    padding: 8px;
+  }
+  .yardprint td, th:nth-child(even) {
+    /* background-color: #dddddd; */
+    border: 1px solid #eee;
+  }
+  .yardprint tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+  @media screen {
+    .table_hidden {
+      display: none;
+ 
+      
+    }
+  }
+  .printable{
+    border: 1px solid #999;
+    border-radius: 50%;
+    height: 22px;
+    width: 22px;
+    display: inline-block;
+    margin-right: 3px;
+    color: #999;
+    text-align: center;
+
+  }
+
+  .out_table  {
+    border: none !important;
+
+  }
+
+ 
+  @media print {
+    html, body {
+      height: auto;   
+     margin: 0 !important;
+     padding: 0 !important;
+     
+    
+    }
+  /* .headeradjust{
+    position: fixed;
+    width: 100%;
+    top: 0;
+    
+
+  } */
+  .header, .header-space,
+.footer, .footer-space {
+  height: 100px;
+}
+.header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+}
+.footer {
+  position: fixed;
+  bottom: 0;
+}
+
+ 
+    
+}
+
+ 

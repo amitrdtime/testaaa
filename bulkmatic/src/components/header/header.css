@@ -1,0 +1,65 @@
+.navbar-custom {
+    background-color: #fff;
+    box-shadow: 0 0 35px 0 rgb(154 161 171 / 15%);
+    padding: 0 10px 0 0;
+    position: sticky;
+    left: 0;
+    right: 0;
+    height: 68px;
+    z-index: 1001;
+    border-bottom: 2px solid #cce4fa;
+    max-width: 100%;
+}
+.logoutright {
+    float:right
+}
+@media (min-width: 992px)
+{
+    .navbar-custom {
+        /* left: 70px!important; */
+        padding-left: 0;
+    }
+}
+
+.logo_logout_wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-right: 20px;
+}
+
+@media (min-width: 1367px) and (max-width: 1920px) {
+    .logo_logout_wrapper {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-right: 29px;
+    }
+}
+
+
+
+.log_out_icon {
+    margin-right: 6px;
+    color: #fff;
+    font-size: 18px;
+}
+
+.signoutsection {
+    display: flex;
+    align-items: center;
+}
+.btn_signout {
+    display: inline-block;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    padding: 7px 20px 7px 20px; 
+    font-size: 16px;
+    border-radius: 8px;
+    background-color: #4267b2;
+    font-family: "Manrope-Regular";
+    color: white;
+}

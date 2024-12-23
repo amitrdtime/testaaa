@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="33" height="33" viewBox="0 0 33 33">
+  <defs>
+    <pattern id="pattern" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" viewBox="0 0 48 48">
+      <image width="48" height="48" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAB7klEQVR4Ae3YAWQbYRiH8SEIgiIoiiIYhsNQBKEIimAYgqIIgiIoAhiKoBgKCIKgGGAoAgiCYAiGAIJDEQSHfx8AR7+7e7+TfOUefgCBy/u+575UVVWV3qXDBYLuN5ThAcG2hzJsEGTnUA4JgqwN5dRCcN1BOXVx1GqI4OoJymkEVxFK6wxbCBuM0Ez9dRZQQQtEqRl6wBbCGjV49wilHDDDE+QhwQQvSKCUIbxq4QCdyBuaMPcCndgzTF1DAUjwzbJ1/kGedoghTwvTTjdaoodGapP1sYGMesjdvfFR38NVDY+QQR+5axgGeGBezdmmqKNwIyRQhlfDjG2gDAfcwasOdpBDG0XrQw5bfEcp/XAfG1NnkMM1SmsAfWAFa/Gx3liH7rVpbmdam4ZuoQ/EsNSAHDoopQj/IYcIRetBDmtcwqtb7KEMcxRtCWWIrcNcw3P5p9506ROMLQdMBe3RQ1YDJFBBN8jdGDKaI0K6Nl4ho5/IXQM7yEOMJVZ4gzysYD/1AbiCqSV0YjOYu4JOaI8LeDWFkLbAX8jTHGsIaWN4d449hBgTfE0dO8vAr9FNPe0pDhC2qKOUmrhx/GAdMyinXxmv2T00cNSGUE5dBFf3s39eb0E5JAi2BMqwQbD9gTJMEGw1dBzaqKqqKrF3DNQYrK6wOS0AAAAASUVORK5CYII="/>
+    </pattern>
+  </defs>
+  <rect id="planning_blck" data-name="planning blck" width="33" height="33" fill="url(#pattern)"/>
+</svg>

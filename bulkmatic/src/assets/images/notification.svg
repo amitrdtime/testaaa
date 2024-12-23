@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="33" height="33" viewBox="0 0 33 33">
+  <defs>
+    <pattern id="pattern" preserveAspectRatio="xMidYMid slice" width="100%" height="100%" viewBox="0 0 48 48">
+      <image width="48" height="48" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAQAAAD9CzEMAAAA70lEQVRYw+3WvQ7BUBiH8WdqwiZGpg7ifiTMEjchkXTUSQxcAjt3wX20EwmLhMFr8dEmpOejJ0TO/92fX9LhAH5+mQWMSUkZE7gBYuR+sRsgeQKJG0AyV/pChjlgSFhevM06F3/cilYZ+QGXt3lBONO3zY8+xl8fy2JdroXAlY5pvs6+MC8IO2pmwFQpLwgTk3yVozJwoKIP9JTzgtDVB+ZawEwf2GoBG5unTeUMnr+TFnCyeztVzgMe8MDvAZE2ELnNaxFmeWXCPK9IiOV9H/jfJba/wUVb5oBF+UAz8091R8PFR2qyJCVl4Sbv52o3tNXDE8TTiOMAAAAASUVORK5CYII="/>
+    </pattern>
+  </defs>
+  <rect id="planning_blck" data-name="planning blck" width="33" height="33" fill="url(#pattern)"/>
+</svg>
