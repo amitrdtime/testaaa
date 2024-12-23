@@ -1,0 +1,159 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+      - development 
+
+parameters:
+  - name: ForceDevBuild
+    type: boolean
+    default: true
+    displayName: "Force Development Build"
+
+variables:
+  - group: "innoveraiautoagents-core-services"
+  - name: vmImageName
+    value: "ubuntu-latest"
+  - name: functionAppName
+    value: "innoveraiautoagents-human-action-service"
+  - name: apiID
+    value: "human-action-service"
+  - name: workingDirectory
+    value: "./"
+  - name: isDev
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/development')]
+
+stages:
+  - stage: Build
+    displayName: Build stage
+
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: $(vmImageName)
+
+        steps:
+          - bash: |
+              if [ -f extensions.csproj ]
+              then
+                  dotnet build extensions.csproj --runtime ubuntu.16.04-x64 --output ./bin
+              fi
+            workingDirectory: $(workingDirectory)
+            displayName: "Build extensions"
+
+          - task: UsePythonVersion@0
+            displayName: "Use Python 3.11"
+            inputs:
+              versionSpec: 3.11 # Functions V2 supports Python 3.6 as of today
+              architecture: 'x64'
+
+          # - bash: |
+          #     pip install --upgrade pip
+          #     pip install --target="./.python_packages/lib/site-packages" -r ./requirements.txt
+          #     # pip install --target="./.python_packages/lib/site-packages" -r ./requirements_inn.txt
+          #   workingDirectory: $(workingDirectory)
+          #   displayName: "Install application dependencies"
+
+          # - script: |
+          #     source ./.python_packages/bin/activate
+          #     pip install --upgrade pip
+          #     pip install -r ./requirements.txt
+          #     # pip install -r ./requirements_inn.txt
+          #   displayName: "Updating packages"
+
+
+          - task: ArchiveFiles@2
+            displayName: "Archive files"
+            inputs:
+              rootFolderOrFile: "$(workingDirectory)"
+              includeRootFolder: false
+              archiveType: zip
+              archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+              replaceExistingArchive: true
+
+          - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+            artifact: drop
+
+# ======================================================= DEVELOPMENT =======================================================
+
+
+  - stage: DeployDev
+    displayName: Deploy Dev Stage
+    dependsOn: Build
+    condition: or(eq('${{ parameters.ForceDevBuild }}', true), and(succeeded(), eq(variables.isDev, true)))
+
+    jobs:
+      - deployment: Deploy
+        displayName: Deploy
+        environment: "development"
+        pool:
+          vmImage: $(vmImageName)
+
+        # strategy:
+        #   runOnce:
+        #     deploy:
+        #       steps:
+        #         - template: .azure/templates/deployTemplate.yaml
+        #           parameters:
+        #             env: "dev"
+        #             functionAppName: "$(functionAppName)-dev"
+        #             azureSubscription: "$(dev-azure-subscription)"
+  
+  - stage: DeployDEVAPI
+    displayName: Deploy Dev APIM APIs
+    dependsOn: DeployDev
+    condition: succeeded()
+
+    jobs:
+      - job: build
+        pool:
+          vmImage: $(vmImageName)
+
+        # steps:
+          # - task: AzureCLI@2
+          #   inputs:
+          #     azureSubscription: "$(dev-azure-subscription)"
+          #     scriptType: 'bash'
+          #     scriptLocation: 'inlineScript'
+          #     inlineScript: |
+          #       apimServiceName="$(dev-azure-apim-name)"
+          #       resourceGroupName="$(dev-azure-resource-group-name)"
+          #       apiId="$(apiID)"
+          #       specPath='.doc/api.yaml'
+          #       az apim api import --specification-format "OpenApi" --specification-path $specPath --path $apiId  --api-id $apiId --resource-group $resourceGroupName --service-name $apimServiceName
+          #   displayName: 'Update DEV APIM APIs'
+
+  # - stage: DeployDevSuccessNotification
+  #   displayName: Notify Dev Stage (Success)
+  #   dependsOn: DeployDEVAPI
+  #   condition: succeeded()
+
+  #   jobs:
+  #     - job: notification
+  #       pool:
+  #         vmImage: $(vmImageName)
+  #       steps:
+  #         - template: .azure/templates/notifyTemplate.yaml
+  #           parameters:
+  #             teamsWebhook: "$(teams-webhook)"
+  #             teamsMessage: DEVELOPMENT SUCCESS! Function app $(functionAppName)-dev has been deployed to development environment successfully
+
+  # - stage: DeployDevFailedNotification
+  #   displayName: Notify Dev Stage (Fail)
+  #   dependsOn: DeployDEVAPI
+  #   condition: failed()
+
+  #   jobs:
+  #     - job: notification
+  #       pool:
+  #         vmImage: $(vmImageName)
+  #       steps:
+  #         - template: .azure/templates/notifyTemplate.yaml
+  #           parameters:
+  #             teamsWebhook: "$(teams-webhook)"
+  #             teamsMessage: DEVELOPMENT ALERT! Function app $(functionAppName)-dev failed to deploy to development environment

@@ -1,0 +1,105 @@
+#template.yaml
+
+parameters:
+  - name: serviceName
+    type: string
+  - name: buildSteps
+    type: stepList
+    default: []
+  - name: deploySteps
+    type: stepList
+    default: []
+  - name: ForceDevBuild
+    type: boolean
+    default: true
+    displayName: "Force Development Build"
+  - name: vmImageName
+    type: string
+  - name: workingDirectory
+    type: string
+
+stages:
+  - stage: Build
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: ${{ parameters.vmImageName }}
+
+        steps:
+          - bash: |
+              if [ -f extensions.csproj ]
+              then
+                  dotnet build extensions.csproj --runtime ubuntu.16.04-x64 --output ./bin
+              fi
+            workingDirectory: ${{ parameters.workingDirectory }}
+            displayName: "Build extensions"
+
+          - task: UsePythonVersion@0
+            displayName: "Use Python 3.11"
+            inputs:
+              versionSpec: 3.11 # Functions V2 supports Python 3.6 as of today
+              architecture: 'x64'
+
+          - bash: |
+              pip install --target="./.python_packages/lib/site-packages" -r ./requirements.txt
+            workingDirectory: ${{ parameters.workingDirectory }}
+            displayName: "Install application dependencies"
+
+          - script: |
+              echo "Running unit tests"
+              source ./.python_packagees/bin/activate
+              pip install -r requirements.txt
+              pip install pytest pytest-azurepipelines
+              pip install pytest-cov
+              mkdir htmlcov
+              pytest tests --junitxml=junit/test-results.xml --cov=src --cov-report=xml --cov-report=html
+            displayName: "Unit tests"
+          
+          - task: PublishCodeCoverageResults@1
+            displayName: "Publish test results"
+            inputs:
+              codeCoverageTool: Cobertura
+              summaryFileLocation: "${{ parameters.workingDirectory }}/coverage.xml"
+              reportDirectory: "${{ parameters.workingDirectory }}/htmlcov"
+
+          - task: PublishTestResults@2
+            displayName: "Publish test results"
+            inputs:
+              testResultsFiles: "**/junit/test-*.xml"
+              testRunTitle: "Unit tests"
+
+          - task: ArchiveFiles@2
+            displayName: "Archive files"
+            inputs:
+              rootFolderOrFile: "${{ parameters.workingDirectory }}"
+              includeRootFolder: false
+              archiveType: zip
+              archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+              replaceExistingArchive: true
+
+          - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+            artifact: drop
+  # ======================================================= DEVELOPMENT =======================================================
+
+
+  - stage: DeployDev
+    displayName: Deploy Dev Stage
+    dependsOn: Build
+    condition: or(eq('${{ parameters.ForceDevBuild }}', true), and(succeeded(), eq(variables.isDev, true)))
+    jobs:
+      - deployment: Deploy
+        displayName: Deploy
+        environment: "development"
+        pool:
+          vmImage: ${{ parameters.vmImageName }}
+          
+  - stage: DeployDEVAPI
+    displayName: Deploy Dev APIM APIs
+    dependsOn: DeployDev
+    condition: succeeded()
+
+    jobs:
+      - job: build
+        pool:
+          vmImage: ${{ parameters.vmImageName }}
